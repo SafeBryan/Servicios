@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Películas</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Películas</h1>
+
+    <button onclick="listarPeliculas()">Listar Películas</button>
+    <button onclick="contarActores()">Contar Actores por Película</button>
+
+    <h3>Buscar películas por palabras clave en la sinopsis</h3>
+    <input type="text" id="word1" placeholder="Palabra 1" />
+    <input type="text" id="word2" placeholder="Palabra 2" />
+    <button onclick="buscarPorSinopsis()">Buscar</button>
+
+    <h3>Buscar películas por actor</h3>
+    <input type="text" id="actor-name" placeholder="Nombre del actor" />
+    <button onclick="buscarPorActor()">Buscar</button>
+
+    <h3>Top 3 películas con mejor puntuación</h3>
+    <label>Desde:</label> <input type="date" id="startDate" />
+    <label>Hasta:</label> <input type="date" id="endDate" />
+    <button onclick="filtrarMejoresPeliculas()">Filtrar</button>
+
+    <table id="movies-table">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Año</th>
+          <th>Duración</th>
+          <th>Actores/Actrices</th>
+          <th>Sinopsis</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      function clearTable() {
+        document.querySelector("#movies-table tbody").innerHTML = "";
+      }
+
+      function listarPeliculas() {
+        clearTable();
+        fetch("movies.json")
+          .then((response) => response.json())
+          .then((movies) => {
+            let tableBody = "";
+            movies.forEach((movie) => {
+              tableBody += `<tr>
+                                    <td>${movie.title}</td>
+                                    <td>${movie.year}</td>
+                                    <td>${movie.duration}</td>
+                                    <td>${movie.actors.join(", ")}</td>
+                                    <td>${movie.storyline}</td>
+                                    <td><img src="${movie.posterurl}" alt="${
+                movie.title
+              }" width="50"></td>
+                                </tr>`;
+            });
+            document.querySelector("#movies-table tbody").innerHTML = tableBody;
+          });
+      }
+
+      function contarActores() {
+        clearTable();
+        fetch("movies.json")
+          .then((response) => response.json())
+          .then((movies) => {
+            let tableBody = "";
+            movies.forEach((movie) => {
+              const actorCount = movie.actors.length;
+              tableBody += `<tr>
+                                    <td>${movie.title}</td>
+                                    <td>${movie.year}</td>
+                                    <td>${movie.duration}</td>
+                                    <td>${actorCount} actores/actrices</td>
+                                    <td>${movie.storyline}</td>
+                                    <td><img src="${movie.posterurl}" alt="${movie.title}" width="50"></td>
+                                </tr>`;
+            });
+            document.querySelector("#movies-table tbody").innerHTML = tableBody;
+          });
+      }
+
+      function buscarPorSinopsis() {
+        clearTable();
+        const word1 = document.getElementById("word1").value.toLowerCase();
+        const word2 = document.getElementById("word2").value.toLowerCase();
+
+        fetch("movies.json")
+          .then((response) => response.json())
+          .then((movies) => {
+            let tableBody = "";
+            movies.forEach((movie) => {
+              if (
+                movie.storyline.toLowerCase().includes(word1) &&
+                movie.storyline.toLowerCase().includes(word2)
+              ) {
+                tableBody += `<tr>
+                                        <td>${movie.title}</td>
+                                        <td>${movie.year}</td>
+                                        <td>${movie.duration}</td>
+                                        <td>${movie.actors.join(", ")}</td>
+                                        <td>${movie.storyline}</td>
+                                        <td><img src="${
+                                          movie.posterurl
+                                        }" alt="${movie.title}" width="50"></td>
+                                    </tr>`;
+              }
+            });
+            document.querySelector("#movies-table tbody").innerHTML = tableBody;
+          });
+      }
+
+      function buscarPorActor() {
+        clearTable();
+        const actorName = document.getElementById("actor-name").value;
+
+        fetch("movies.json")
+          .then((response) => response.json())
+          .then((movies) => {
+            let tableBody = "";
+            movies.forEach((movie) => {
+              if (movie.actors.includes(actorName)) {
+                tableBody += `<tr>
+                                        <td>${movie.title}</td>
+                                        <td>${movie.year}</td>
+                                        <td>${movie.duration}</td>
+                                        <td>${movie.actors.join(", ")}</td>
+                                        <td>${movie.storyline}</td>
+                                        <td><img src="${
+                                          movie.posterurl
+                                        }" alt="${movie.title}" width="50"></td>
+                                    </tr>`;
+              }
+            });
+            document.querySelector("#movies-table tbody").innerHTML = tableBody;
+          });
+      }
+
+      function filtrarMejoresPeliculas() {
+        clearTable();
+        const startDate = document.getElementById("startDate").value;
+        const endDate = document.getElementById("endDate").value;
+
+        fetch("movies.json")
+          .then((response) => response.json())
+          .then((movies) => {
+            let filteredMovies = movies.filter(
+              (movie) =>
+                movie.releaseDate >= startDate && movie.releaseDate <= endDate
+            );
+
+            filteredMovies.sort((a, b) => {
+              const avgA =
+                a.ratings.reduce((sum, rating) => sum + rating, 0) /
+                a.ratings.length;
+              const avgB =
+                b.ratings.reduce((sum, rating) => sum + rating, 0) /
+                b.ratings.length;
+              return avgB - avgA;
+            });
+
+            let tableBody = "";
+            filteredMovies.slice(0, 3).forEach((movie) => {
+              tableBody += `<tr>
+                                    <td>${movie.title}</td>
+                                    <td>${movie.year}</td>
+                                    <td>${movie.duration}</td>
+                                    <td>${movie.actors.join(", ")}</td>
+                                    <td>${movie.storyline}</td>
+                                    <td><img src="${movie.posterurl}" alt="${
+                movie.title
+              }" width="50"></td>
+                                </tr>`;
+            });
+            document.querySelector("#movies-table tbody").innerHTML = tableBody;
+          });
+      }
+    </script>
+  </body>
+</html>

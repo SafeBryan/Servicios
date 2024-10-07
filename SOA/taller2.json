@@ -1,0 +1,86 @@
+{
+    "contenedores": [
+        {
+            "tipo": "Grande",
+            "descripcion": "Acepta envases grandes",
+            "envasesCompatibles": ["Grande ancho", "Grande alto"]
+        },
+        {
+            "tipo": "Mediano",
+            "descripcion": "No acepta envases grandes",
+            "envasesCompatibles": ["Mediano ancho", "Mediano alto", "Pequeño"]
+        },
+        {
+            "tipo": "Vertical",
+            "descripcion": "Acepta envases altos",
+            "envasesCompatibles": ["Grande alto", "Mediano alto"]
+        }
+    ],
+    "envases": [
+        {
+            "tipo": "Grande ancho",
+            "descripcion": "Válido para alimentos"
+        },
+        {
+            "tipo": "Grande alto",
+            "descripcion": "Válido para alimentos"
+        },
+        {
+            "tipo": "Mediano ancho",
+            "descripcion": "Válido para alimentos",
+            "liquidosCompatibles": ["Agua", "Leche", "Aceite", "Vinagre"]
+        },
+        {
+            "tipo": "Mediano alto",
+            "descripcion": "Resistente a sustancias corrosivas",
+            "liquidosCompatibles": ["Lejía", "Amoniaco", "Jabón", "Aguarrás", "Gasolina"]
+        },
+        {
+            "tipo": "Pequeño",
+            "descripcion": "Resistente a sustancias corrosivas",
+            "liquidosCompatibles": ["Lejía", "Amoniaco", "Jabón", "Aguarrás", "Gasolina", "Alcohol"]
+        }
+    ],
+    "liquidos": [
+        {
+            "nombre": "Agua",
+            "tipo": "No corrosivo"
+        },
+        {
+            "nombre": "Leche",
+            "tipo": "No corrosivo"
+        },
+        {
+            "nombre": "Lejía",
+            "tipo": "Corrosivo"
+        },
+        {
+            "nombre": "Amoniaco",
+            "tipo": "Corrosivo"
+        },
+        {
+            "nombre": "Jabón",
+            "tipo": "Corrosivo"
+        },
+        {
+            "nombre": "Aguarrás",
+            "tipo": "Corrosivo"
+        },
+        {
+            "nombre": "Gasolina",
+            "tipo": "Corrosivo"
+        },
+        {
+            "nombre": "Aceite",
+            "tipo": "No corrosivo"
+        },
+        {
+            "nombre": "Vinagre",
+            "tipo": "No corrosivo"
+        },
+        {
+            "nombre": "Alcohol",
+            "tipo": "Corrosivo"
+        }
+    ]
+}
