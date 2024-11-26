@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Estudiantes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Lista de Estudiantes</h1>
+
+    <div class="text-end mb-3">
+        <a href="/estudiantes/nuevo" class="btn btn-primary">Agregar Estudiante</a>
+    </div>
+
+    <!-- Campo de búsqueda -->
+    <div class="mb-3">
+        <input type="text" id="buscarCedula" class="form-control" placeholder="Buscar por cédula..." oninput="filtrarEstudiantes()">
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>Cédula</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody id="tablaEstudiantes">
+        <tr th:each="estudiante : ${estudiantes}">
+            <td th:text="${estudiante.cedula}"></td>
+            <td th:text="${estudiante.nombre}"></td>
+            <td th:text="${estudiante.apellido}"></td>
+            <td th:text="${estudiante.direccion}"></td>
+            <td th:text="${estudiante.telefono}"></td>
+            <td>
+                <a th:href="@{/estudiantes/editar/{cedula}(cedula=${estudiante.cedula})}" class="btn btn-warning btn-sm">Editar</a>
+                <a th:href="@{/estudiantes/eliminar/{cedula}(cedula=${estudiante.cedula})}" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    async function filtrarEstudiantes() {
+        const cedulaParcial = document.getElementById('buscarCedula').value;
+
+
+        const response = await fetch(`/api/estudiantes/buscar?cedulaParcial=${cedulaParcial}`);
+        const estudiantes = await response.json();
+
+
+        const tabla = document.getElementById('tablaEstudiantes');
+        tabla.innerHTML = '';
+        estudiantes.forEach(estudiante => {
+            tabla.innerHTML += `
+                <tr>
+                    <td>${estudiante.cedula}</td>
+                    <td>${estudiante.nombre}</td>
+                    <td>${estudiante.apellido}</td>
+                    <td>${estudiante.direccion}</td>
+                    <td>${estudiante.telefono}</td>
+                    <td>
+                        <a href="/estudiantes/editar/${estudiante.cedula}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="/estudiantes/eliminar/${estudiante.cedula}" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

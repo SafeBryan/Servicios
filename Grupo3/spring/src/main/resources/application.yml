@@ -1,0 +1,11 @@
+server:
+  port: 8082
+Spring:
+  datasource:
+    url: jdbc:mysql://localhost/soa
+    username: root
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: none

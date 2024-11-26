@@ -5,9 +5,8 @@ class crudC {
         $objetoConexion = new conexion();
         $conn = $objetoConexion->conectar();
         
-        $sql = "SELECT * FROM estudiantes WHERE cedula = :cedula";
+        $sql = "SELECT * FROM estudiantes WHERE cedula like '".$cedula."%'";
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':cedula', $cedula, PDO::PARAM_STR);
         $stmt->execute();
         
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
